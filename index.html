@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokedex</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+    <script src="script.js"></script>
+    <!-- <script src="script_test.js"></script> -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body onload="init()">
+    <div class="main">
+        <h1>PokeDex</h1>
+        <div id="all-pokemon-cards">
+
+        </div>
+        <div class="btn-more-pokemon">
+            <button onclick="loadMorePokemons()">Mehr Pokemon</button>
+        </div>
+        <div id="soloCard" class="solo-card d-none">
+            <div id="pokemon-background">
+                <div class="card-head">
+                    <div class="close-btn">
+                        <span onclick="closeSoloCard()">X</span>
+                    </div>
+                    <div id="pokemon">
+                        <h1 id="pokeName">Name</h1>
+                    </div>
+                    <div class="pokemon-number">
+                        #<span id="pokeNumber">001</span>
+                    </div>
+                </div>
+                <div class="pokemon-art">
+                    <div>
+                        <span class="bg-text" id="pokeType1">grass</span>
+                    </div>
+                    <div>
+                        <span class="bg-text" id="pokeType2">poisen</span>
+                    </div>
+                </div>
+            </div>
+            <div class="info-container">
+                <img id="pokemonImage" src="">
+                <div id="pokemonInfoHead">
+                    <div id="about" class="redBorderline" onclick="showAbout(i)">
+                        About
+                    </div>
+                    <div id="base" class="gray" onclick="showBaseStats(i)">
+                        Base Stats
+                    </div>
+                    <div onclick="showEvolutions(i)">
+                        Evolution
+                    </div>
+                    <div onclick="showMoves(i)">
+                        Moves
+                    </div>
+                </div>
+                <div>
+                    <table>
+                        <tr>
+                            <td>Height</td>
+                            <td id="height">60cm</td>
+                        </tr>
+                        <tr>
+                            <td>Weight</td>
+                            <td id="weight">8.5 kg</td>
+                        </tr>
+                        <tr>
+                            <td>Abilities</td>
+                            <td id="abilities">Blaze, Solar-Power</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

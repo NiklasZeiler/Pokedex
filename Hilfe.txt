@@ -1,0 +1,253 @@
+let allPokemons = [];
+let currentPokemon;
+
+
+// Startet Funktionen beim aufrufen der Seite
+
+async function init() {
+    await loadAllPokemons();
+    renderCardsInfo();
+
+}
+
+
+
+
+function renderCardsInfo() {
+    document.getElementById('cards').innerHTML = "";
+    for (let i = 0; i < allPokemons.length; i++) {
+        document.getElementById('cards').innerHTML += `
+        <div onclick="openSinglePokemon(${i})" class="pokemon-card">
+             <div class="pokemon-card2">
+                  <h2 class="uppercase" id="pokemonCardName${i}">${allPokemons[i].name}</h2>
+                  <div class="pokemon-card-type-button">
+                       <button id="pokemonCardType${i}">${allPokemons[i].types[0].type.name}</button>
+                  </div>
+             </div>
+             <div class="pokemon-card-image">
+                  <img class="pokemon-img" id="pokemonCardImageFront${i}" src=${allPokemons[i].sprites.other.dream_world.front_default}>
+             </div>
+         </div>
+    `;
+    }
+}
+
+
+//Ladet alle Pokemon Karten ins Array
+async function loadAllPokemons() {
+    for (let i = 1; i < 20; i++) {
+        let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
+        let jsonResponse = await response.json();
+        allPokemons.push(jsonResponse);
+    }
+}
+
+
+//Schließt die Einzel Karte
+function closeSinglePokemon() {
+    document.getElementById('singleCard').innerHTML = "";
+    document.getElementById('singleCard').classList.add('d-none');
+    document.getElementById('cards-container').classList.remove('d-none');
+}
+
+
+function openSinglePokemon(i) {
+    document.getElementById('singleCard').classList.remove('d-none');
+    document.getElementById('singleCard').innerHTML = "";
+    document.getElementById('singleCard').innerHTML += `
+    <div class="pokedex-container">
+        <div id="pokedexSingle">
+            <div class="favorit-container">
+               <img onclick="lastPokemon(${i - 1})" src="img/arrow-left.png">
+               <img src="img/favorite.png">
+               
+               <img onclick="nextPokemon(${i + 1})" src="img/arrow-right.png">
+            </div>
+            <div class="pokedex-single-container">
+            <div class="pokedex-single-left">
+                 <h1 class="uppercase" id="pokemonName${i}">${allPokemons[i].name}</h1>
+                 <div class="pokemon-type-button">
+                     <button class="uppercase" id="pokemonType${i}">${allPokemons[i].types[0].type.name}</button>
+                 </div>
+             </div>
+             <div class="pokemon-image">
+                 <img class="pokemon-image-front" id="pokemonImageFront${i}" src=${allPokemons[i].sprites.other.dream_world.front_default}>
+             </div>
+             </div>
+        </div>
+        <div class="info-container">
+             <div class="info-menue">
+                 <span onclick="showInfoAbout(${i})">About</span>
+                 <span onclick="showInfoBaseStats(${i})">Base Stats</span>
+                 <span onclick="showInfoEvolution(${i})">Evolution</span>
+                 <span onclick="showInfoMoves(${i})">Moves</span>
+            </div>
+            <div class="info-container2">
+            <div id="pokemonAbout" class="pokemon-info-about"> 
+            <div class="poke-info">
+                 <div class="poke-question">Spezies:</div>
+                 <span class="uppercase" id="pokemonSpezies${i}">${allPokemons[i].species.name}</span>
+            </div>
+            <div class="poke-info">
+                <div class="poke-question">Height:</div>
+                <span id="pokemonHeight${i}">${allPokemons[i].height}</span>
+            </div>
+            <div class="poke-info">
+                <div class="poke-question">Weight:</div>
+                <span id="pokemonWeight${i}">${allPokemons[i].weight}</span>
+            </div>
+            <div class="poke-info">
+                <div class="poke-question">Abilities:</div>
+                <span class="uppercase" id="pokemonAbilities${i}">${allPokemons[i].abilities[0].ability.name}</span>
+            </div>   
+        </div> 
+        <div id="pokemonMoves" class="pokemon-info-about d-none">
+        </div>
+        <div id="pokemonBaseStats" class="pokemon-info-about d-none">
+        </div>
+
+           </div>
+        <div class="close-button-container">
+           <div class="close-button">
+               <span onclick="closeSinglePokemon()">close</span>
+           </div>
+        </div>
+    </div>
+`;
+}
+
+
+
+
+
+function showInfoAbout(i) {
+    document.getElementById('pokemonMoves').classList.add('d-none');
+    document.getElementById('pokemonBaseStats').classList.add('d-none');
+    document.getElementById('pokemonAbout').classList.remove('d-none');
+
+    document.getElementById('pokemonBaseStats').innerHTML = `
+    <div class="info-container">
+    <div class="info-menue">
+        <span onclick="showInfoAbout(${i})">About</span>
+        <span onclick="showInfoBaseStats(${i})">Base Stats</span>
+        <span onclick="showInfoEvolution(${i})">Evolution</span>
+        <span onclick="showInfoMoves(${i})">Moves</span>
+   </div>
+   <div class="info-container2">
+   <div id="pokemonAbout" class="pokemon-info-about"> 
+   <div class="poke-info">
+        <div class="poke-question">Spezies:</div>
+        <span class="uppercase" id="pokemonSpezies${i}">${allPokemons[i].species.name}</span>
+   </div>
+   <div class="poke-info">
+       <div class="poke-question">Height:</div>
+       <span id="pokemonHeight${i}">${allPokemons[i].height}</span>
+   </div>
+   <div class="poke-info">
+       <div class="poke-question">Weight:</div>
+       <span id="pokemonWeight${i}">${allPokemons[i].weight}</span>
+   </div>
+   <div class="poke-info">
+       <div class="poke-question">Abilities:</div>
+       <span class="uppercase" id="pokemonAbilities${i}">${allPokemons[i].abilities[0].ability.name}</span>
+   </div>   
+</div> 
+    `;
+
+
+}
+
+function showInfoBaseStats(i) {
+    document.getElementById('pokemonAbout').classList.add('d-none');
+    document.getElementById('pokemonBaseStats').classList.remove('d-none');
+    document.getElementById('pokemonBaseStats').innerHTML = "";
+    document.getElementById('pokemonBaseStats').innerHTML += `
+    <span>Test</span>
+    `;
+}
+
+
+
+function showInfoMoves(i) {
+    document.getElementById('pokemonAbout').classList.add('d-none');
+    document.getElementById('pokemonBaseStats').classList.add('d-none');
+    document.getElementById('pokemonMoves').classList.remove('d-none');
+    document.getElementById('pokemonMoves').innerHTML = "";
+    document.getElementById('pokemonMoves').innerHTML += `
+      <div class="poke-info">
+           <div class="poke-question">Spezies:</div>
+           <span class="uppercase" id="pokemonSpeziess${i}">${allPokemons[i].species.name}</span>
+      </div>
+      <div class="poke-info">
+           <div class="poke-question">Height:</div>
+           <span id="pokemonHeights${i}">${allPokemons[i].height}</span>
+      </div>
+      <div class="poke-info">
+          <div class="poke-question">Weight:</div>
+          <span id="pokemonWeights${i}">${allPokemons[i].weight}</span>
+      </div>
+      <div class="poke-info">
+          <div class="poke-question">Abilities:</div>
+          <span class="uppercase" id="pokemonAbilitiess${i}">${allPokemons[i].abilities[0].ability.name}</span>
+      </div>  
+   `
+}
+
+function nextPokemon(i) {
+
+    if (i == allPokemons.length) {
+        i = 0;
+    }
+    openSinglePokemon(i);
+}
+
+
+
+function lastPokemon(i) {
+
+    if (i == 0) {
+        i = allPokemons.length - 1;
+    }
+
+    openSinglePokemon(i);
+}
+
+
+/*
+
+// Karten in Übersicht rendern
+function renderCardsInfo() {
+    for (let i = 1; i < 20; i++) {
+        document.getElementById('pokemonCardName').innerHTML = allPokemon[0]['name']
+        document.getElementById('pokemonCardImageFront').src = allPokemon[0]['sprites']['other']['dream_world']['front_default'];
+        document.getElementById('pokemonCardType').innerHTML = allPokemon[0]['types']['0']['type']['name'];
+    }
+}
+
+
+// Einzelkarte Oberer Bereich rendern
+function renderPokemonInfo() {
+    document.getElementById('pokemonName').innerHTML = currentPokemon[0]['name'];
+    document.getElementById('pokemonImageFront').src = currentPokemon[0]['sprites']['other']['dream_world']['front_default'];
+    document.getElementById('pokemonType').innerHTML = currentPokemon[0]['types']['0']['type']['name'];
+}
+
+*/
+
+// Einzelkarte Menüpunkt About rendern
+/*
+function renderPokemonAbout() {
+    document.getElementById('pokemonSpezies').innerHTML = currentPokemon['species']['name'];
+    document.getElementById('pokemonHeight').innerHTML = currentPokemon.height + ' cm';
+    document.getElementById('pokemonWeight').innerHTML = currentPokemon.weight + ' kg';
+    document.getElementById('pokemonAbilities').innerHTML = currentPokemon['abilities']['0']['ability']['name'];
+}
+//
+function renderPokemonBaseStats() {
+    document.getElementById('HP').innerHTML = currentPokemon['stats'][0]['base_stat'];
+    document.getElementById('ATK').innerHTML = currentPokemon['stats'][1]['base_stat'];
+    document.getElementById('DEF').innerHTML = currentPokemon['stats'][2]['base_stat'];
+    document.getElementById('SPD').innerHTML = currentPokemon['stats'][5]['base_stat'];
+    document.getElementById('EXP').innerHTML = currentPokemon['base_experience'];
+}
+*/

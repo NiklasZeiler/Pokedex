@@ -1,0 +1,260 @@
+body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    background: linear-gradient(to right, #FFF, #cfc96f);
+}
+
+#pokedex {
+    position: relative;
+}
+
+#pokemon-card {
+    min-height: 30vh;
+    background-color: #fb6c6c;
+    color: white;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.card-title {
+    padding-top: 8px;
+}
+
+.d-none {
+    display: none;
+}
+
+.info-container {
+    background-color: rgb(255, 255, 255);
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    margin-top: -40px;
+    min-height: 200px;
+    max-width: 800px;
+    min-width: 350px;
+    position: fixed;
+    bottom: 180px;
+    left: 500px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 500px;
+    padding: 24px;
+}
+
+#pokemon-card {
+    position: absolute;
+    border-top-left-radius: 40px;
+    border-top-right-radius: 40px;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    max-width: 800px;
+    min-width: 350px;
+    height: 615px;
+    width: 500px;
+    bottom: 200px;
+    left: 500px;
+}
+
+.poke-image {
+    margin-top: 24px;
+    z-index: 9;
+}
+
+.pokemon-info-section {
+    color: black;
+}
+
+.infos {
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#soloPokemon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transition: all .3s;
+    background-color: rgba(0, 0, 0, .5)
+}
+
+.links {
+    padding: 24px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    padding: 15px;
+}
+
+#all-pokemon-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.all-cards {
+    max-width: 1200px;
+    background-color: rgb(238, 238, 238);
+    border-radius: 20px;
+    box-shadow: 0 3px 15px rgba(100, 100, 100, 0.5);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    width: 140px;
+    margin: 0px 5px 20px 20px;
+}
+
+.all-cards:hover {
+    animation: bounce 0.5s linear;
+}
+
+.card-image {
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    display: inline-block;
+}
+
+.card-image img {
+    margin-top: 20px;
+    max-width: 90%;
+}
+
+.all-cards .name {
+    margin: 10px 0 5px;
+    letter-spacing: 1px;
+}
+
+.all-cards .number {
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+@keyframes bounce {
+    20% {
+        transform: translateY(-6px)
+    }
+    40% {
+        transform: translateY(0px)
+    }
+    80% {
+        transform: translateY(-2px)
+    }
+    100% {
+        transform: translateY(0)
+    }
+}
+
+.btn-more-pokemon {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+.btn-more-pokemon button {
+    height: 50px;
+    background-color: red;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+}
+
+.bg-fire {
+    background-color: #fd7d24;
+}
+
+.bg-grass {
+    background-color: #9bcc50;
+}
+
+.bg-water {
+    background-color: #4592c4;
+}
+
+.bg-poisen {
+    background-color: #b97fc9;
+}
+
+.bg-bug {
+    background-color: #b97fc9;
+}
+
+.bg-flying {
+    background: linear-gradient( 180deg, #3dc7ef 50%, #bdb9b8 50%);
+}
+
+.bg-normal {
+    background-color: #A4ACAF;
+}
+
+.bg-electric {
+    background-color: #efd535;
+}
+
+.bg-ground {
+    background: linear-gradient( 180deg, #f7de3f 50%, #ab9842 50%);
+}
+
+.bg-fairy {
+    background-color: #fdb9e9;
+}
+
+.bg-fighting {
+    background-color: #d56723;
+}
+
+.bg-psychic {
+    background-color: #f366b9;
+}
+
+.bg-rock {
+    background-color: #a38c21;
+}
+
+.bg-steel {
+    background-color: #9eb7b8;
+}
+
+.bg-ice {
+    background-color: #51c4e7;
+}
+
+.bg-goast {
+    background-color: #7c62a3;
+}
+
+.bg-dragon {
+    background: linear-gradient( 180deg, #53a4cf 50%, #f16e57 50%);
+}
+
+.card-text {
+    color: black;
+    padding: 4px 12px;
+    margin-bottom: 8px;
+}
+
+.card-number {
+    padding-bottom: 8px;
+}
