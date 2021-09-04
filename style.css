@@ -28,6 +28,7 @@ h1 {
 
 .card-type-solo {
     text-align: center;
+    margin-bottom: 8px;
 }
 
 .number-name {
@@ -89,7 +90,7 @@ h1 {
 }
 
 .close-btn {
-    font-size: 33px;
+    font-size: 25px;
     font-weight: 600;
     cursor: pointer;
 }
@@ -119,14 +120,9 @@ h1 {
     background-color: rgba(0, 0, 0, .5);
 }
 
-.links {
-    padding: 24px;
-}
-
-a {
-    text-decoration: none;
-    color: black;
-    padding: 15px;
+.pokemon-number {
+    font-weight: 600;
+    font-size: 25px;
 }
 
 #all-pokemon-cards {
@@ -318,4 +314,43 @@ a {
 
 .flex {
     display: flex;
+}
+
+.table {
+    padding: 20px;
+    width: 100%;
+}
+
+.table td:first-child {
+    width: 100px;
+}
+
+.table td:last-child {
+    font-weight: 600;
+}
+
+.table tr {
+    line-height: 40px;
+}
+
+.hp, .attack, .defense, .spAtk, .spDef, .speed, .total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.range-view {
+    width: 90%;
+    background-color: rgba( 0, 0, 0, .1);
+    border-radius: 100rem;
+    overflow: hidden;
+    height: 5px;
+}
+
+.baseStatsLine {
+    display: block;
+    height: 5px;
+    position: relative;
+    border-radius: inherit;
+    animation: fill .125s forwards;
 }
