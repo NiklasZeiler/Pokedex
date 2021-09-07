@@ -1,7 +1,7 @@
 let currentPokemons;
 let allPokemons = [];
 let loadCurrentCards = 0;
-
+let evolutions = [];
 
 function init() {
     loadMorePokemons();
@@ -11,6 +11,7 @@ function init() {
 function loadMorePokemons() {
     loadCurrentCards += 20;
     loadAmountOfPokemon(loadCurrentCards);
+
 }
 
 
@@ -136,7 +137,7 @@ function generateSingleCards(i) {
     <div id="pokemon-background">
         <div class="card-head">
             <div>
-                <span class="close-btn" onclick="closeSoloCard(${i})">X</span>
+                <span class="close-btn" onclick="closeSoloCard()">X</span>
             </div>
             <div id="pokemon">
                 <h1 id="pokeName">Name</h1>
@@ -146,20 +147,19 @@ function generateSingleCards(i) {
             </div>
         </div>    
         <div id="card-type-solo${i}" class="card-type-solo"></div>
-    </div>
-        <div class="info-container">
+                <div class="info-container">
             <img id="pokemonImage" src="">
             <div id="pokemonInfoHead" class="flex">
-                <div id="about" class="" onclick="showAboutPokemon(${i})">
+                <div id="about" class="" onclick="showAbout(${i})">
                     About
                 </div>
                 <div id="base" class="gray" onclick="showBaseStats(${i})">
                     Base Stats
                 </div>
-                <div id="evolution" class="gray" onclick="showEvolutions()">
+                <div id="evolution" class="gray" onclick="showEvolutions(${i})">
                     Evolution
                 </div>
-                <div id="move" class="gray" onclick="showMoves()">
+                <div id="move" class="gray" onclick="showMoves(${i})">
                     Moves
                 </div>
             </div>
@@ -167,11 +167,11 @@ function generateSingleCards(i) {
                 <table id="table${i}" class="table">
                     <tr>
                         <td>Height</td>
-                        <td id="height">60cm</td>
+                        <td id="heightPokemon">60cm</td>
                     </tr>
                     <tr>
-                        <td>Weight</td>
-                        <td id="weight">8.5 kg</td>
+                        <td>Weigth</td>
+                        <td id="weightPokemon">8.5 kg</td>
                     </tr>
                     <tr>
                         <td>Abilities</td>
@@ -179,6 +179,8 @@ function generateSingleCards(i) {
                     </tr>
                 </table>
             </div>
+    </div>
+
         </div>
     `;
 }
@@ -194,200 +196,30 @@ function showTypeSolo(index) {
 }
 
 
-function showBaseStats(i) {
-    document.getElementById('base').classList.remove('gray');
-    document.getElementById('about').classList.add('gray');
-    document.getElementById('evolution').classList.add('gray');
-    document.getElementById('move').classList.add('gray');
-    changeColorBaseStats();
-    document.getElementById('pokemon-background').style.height = '750px';
-}
-
-
-function changeColorBaseStats() {
-    chooseColorBaseStats(hp, '#5bc686', '#fb7171');
-    chooseColorBaseStats(attack, '#5bc686', '#fb7171');
-    chooseColorBaseStats(defense, '#5bc686', '#fb7171');
-    chooseColorBaseStats(spAtk, '#5bc686', '#fb7171');
-    chooseColorBaseStats(spDef, '#5bc686', '#fb7171');
-    chooseColorBaseStats(speed, '#5bc686', '#fb7171');
-    chooseColorBaseStats(total, '#5bc686', '#fb7171');
-    chooseColorBaseStats(totalWitdh, '#5bc686', '#fb7171');
-    // generateBaseStats();
-}
-
-
-function chooseColorBaseStats(attribut, color, color2, i) {
-    changeColorBaseStats();
-    if (attribut > 50) {
-        attributColor = color;
-    } else {
-        attributColor = color2;
-    }
-    let hp = allPokemons[i]['stats'][0]['base_stat'];
-    let attack = allPokemons[i]['stats'][1]['base_stat'];
-    let defense = allPokemons[i]['stats'][2]['base_stat'];
-    let spAtk = allPokemons[i]['stats'][3]['base_stat'];
-    let spDef = allPokemons[i]['stats'][4]['base_stat'];
-    let speed = allPokemons[i]['stats'][5]['base_stat'];
-    let total = hp + attack + defense + spAtk + spDef + speed;
-    let totalWitdh = total / 6;
-    document.getElementById(`table${i}`).innerHTML = generateBaseStats(hp, attack, defense, spAtk, spDef, speed, total, totalWitdh, hpColor, attackColor, defenseColor, spAtkColor, spDefColor, speedColor, totalColor);
-}
-
-
-// function showBaseStats(i) {
-//     document.getElementById('base').classList.remove('gray');
-//     document.getElementById('about').classList.add('gray');
-//     document.getElementById('evolution').classList.add('gray');
-//     document.getElementById('move').classList.add('gray');
-//     let hp = allPokemons[i]['stats'][0]['base_stat'];
-//     let attack = allPokemons[i]['stats'][1]['base_stat'];
-//     let defense = allPokemons[i]['stats'][2]['base_stat'];
-//     let spAtk = allPokemons[i]['stats'][3]['base_stat'];
-//     let spDef = allPokemons[i]['stats'][4]['base_stat'];
-//     let speed = allPokemons[i]['stats'][5]['base_stat'];
-//     let total = hp + attack + defense + spAtk + spDef + speed;
-//     let totalWitdh = total / 6;
-//     changeColorBaseStats();
-//     document.getElementById('pokemon-background').style.height = '750px';
-//     document.getElementById('table').innerHTML = generateBaseStats(changeColorBaseStats());
-// }
-
-
-
-// function chooseCurrentColor(i) {
-//     let hp = allPokemons[i]['stats'][0]['base_stat'];
-//     let attack = allPokemons[i]['stats'][1]['base_stat'];
-//     let defense = allPokemons[i]['stats'][2]['base_stat'];
-//     let spAtk = allPokemons[i]['stats'][3]['base_stat'];
-//     let spDef = allPokemons[i]['stats'][4]['base_stat'];
-//     let speed = allPokemons[i]['stats'][5]['base_stat'];
-//     let total = hp + attack + defense + spAtk + spDef + speed;
-//     let totalWitdh = total / 6;
-
-//     if (hp > 50) {
-//         hpColor = '#5bc686';
-//     }
-//     else {
-//         hpColor = '#fb7171';
-//     }
-
-//     if (attack > 50) {
-//         attackColor = '#5bc686';
-//     }
-//     else {
-//         attackColor = '#fb7171';
-//     }
-
-//     if (defense > 50) {
-//         defenseColor = '#5bc686';
-//     }
-//     else {
-//         defenseColor = '#fb7171';
-//     }
-
-//     if (spAtk > 50) {
-//         spAtkColor = '#5bc686';
-//     }
-//     else {
-//         spAtkColor = '#fb7171';
-//     }
-
-//     if (spDef > 50) {
-//         spDefColor = '#5bc686';
-//     }
-//     else {
-//         spDefColor = '#fb7171';
-//     }
-
-//     if (speed > 50) {
-//         speedColor = '#5bc686';
-//     }
-//     else {
-//         speedColor = '#fb7171';
-//     }
-//     if (totalWitdh > '50') {
-//         totalColor = '#5bc686';
-//     }
-//     else {
-//         totalColor = '#fb7171';
-//     }
-//     document.getElementById(`table${i}`).innerHTML = generateBaseStats(hp, attack, defense, spAtk, spDef, speed, total, totalWitdh, hpColor, attackColor, defenseColor, spAtkColor, spDefColor, speedColor, totalColor);
-// }
-
-
-function generateBaseStats(hp, attack, defense, spAtk, spDef, speed, total, totalWitdh, hpColor, attackColor, defenseColor, spAtkColor, spDefColor, speedColor, totalColor) {
+function generateAboutPokemon(i) {
     return `
-    	<tr>
-            <td>HP</td>
-            <td id="hp" class="hp">${hp}
-                <div  class="range-view">
-                    <span style="width:${hp}% ; background-color: ${hpColor}" class="baseStatsLine"></span>
-                </div>
-            </td>
+        <tr>
+            <td>Height</td>
+            <td id="heightPokemon">60cm</td>
         </tr>
         <tr>
-            <td>Attack</td>
-            <td id="attack" class="attack">${attack}
-                <div  class="range-view">
-                    <span style="width:${attack}% ; background-color: ${attackColor}" class="baseStatsLine"></span>
-                </div>
-            </td>
+            <td>Weigth</td>
+            <td id="weightPokemon">8.5 kg</td>
         </tr>
         <tr>
-            <td>Defense</td>
-            <td id="defense" class="defense">${defense}
-                <div  class="range-view">
-                    <span style="width:${defense}% ; background-color: ${defenseColor} " class="baseStatsLine"></span>
-                </div>
-            </td>
+            <td>Abilities</td>
+            <td id="abilities">Blaze, Solar-Power</td>
         </tr>
-        <tr>
-            <td>Sp. Atk</td>
-            <td id="spAtk" class="spAtk">${spAtk}
-                <div  class="range-view">
-                    <span style="width:${spAtk}% ; background-color: ${spAtkColor} " class="baseStatsLine"></span>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Sp. Def</td>
-            <td id="spDef" class="spDef">${spDef}
-                <div  class="range-view">
-                    <span style="width:${spDef}% ; background-color: ${spDefColor}" class="baseStatsLine"></span>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Speed</td>
-            <td id="speed" class="speed">${speed}
-                <div  class="range-view">
-                    <span style="width:${speed}% ; background-color: ${speedColor}" class="baseStatsLine"></span>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>Total</td>
-            <td id="total" class="total">${total}
-                <div  class="range-view">
-                    <span style="width:${totalWitdh}% ; background-color: ${totalColor}" class="baseStatsLine"></span>
-                </div>
-            </td>
-        </tr>    
     `;
+
 }
 
 
 function showAboutPokemon(i) {
-    document.getElementById('base').classList.add('gray');
-    document.getElementById('about').classList.remove('gray');
-    document.getElementById('evolution').classList.add('gray');
-    document.getElementById('move').classList.add('gray');
     let height = allPokemons[i]['height'];
     let weight = allPokemons[i]['weight'];
-    document.getElementById('height').innerHTML = `${height} cm`;
-    document.getElementById('weight').innerHTML = `${weight} kg`;
+    document.getElementById('heightPokemon').innerHTML = height + 'cm';
+    document.getElementById('weightPokemon').innerHTML = weight + 'kg';
     document.getElementById('abilities').innerHTML = '';
     for (let j = 0; j < allPokemons[i]['abilities'].length; j++) {
         let abilities = allPokemons[i]['abilities'][j]['ability']['name'];
@@ -398,6 +230,214 @@ function showAboutPokemon(i) {
         }
     }
 }
+
+
+function showAbout(i) {
+    document.getElementById(`table${i}`).innerHTML = generateAboutPokemon(i);
+    showAboutPokemon(i);
+    displayAbout();
+    document.getElementById('pokemon-background').style.height = '550px';
+
+}
+
+
+function showBaseStats(i) {
+    displayBaseStets();
+    let pokemonBaseStats = getPokemonBaseStats(i);
+    let pokemonBaseStatsColor = getPokemonBaseStatsColor(pokemonBaseStats);
+    document.getElementById('pokemon-background').style.height = '665px';
+    document.getElementById('table' + i).innerHTML = generateBaseStats(pokemonBaseStats, pokemonBaseStatsColor);
+}
+
+
+function getPokemonBaseStats(i) {
+    return {
+        hp: allPokemons[i]['stats'][0]['base_stat'],
+        attack: allPokemons[i]['stats'][1]['base_stat'],
+        defense: allPokemons[i]['stats'][2]['base_stat'],
+        spAtk: allPokemons[i]['stats'][3]['base_stat'],
+        spDef: allPokemons[i]['stats'][4]['base_stat'],
+        speed: allPokemons[i]['stats'][5]['base_stat'],
+    }
+}
+
+
+function getPokemonBaseStatsColor(pokemonBaseStats) {
+    return {
+        hpColor: getBaseStatsColor(pokemonBaseStats['hp']),
+        attackColor: getBaseStatsColor(pokemonBaseStats['attack']),
+        defenseColor: getBaseStatsColor(pokemonBaseStats['defense']),
+        spAtkColor: getBaseStatsColor(pokemonBaseStats['spAtk']),
+        spDefColor: getBaseStatsColor(pokemonBaseStats['spDef']),
+        speedColor: getBaseStatsColor(pokemonBaseStats['speed']),
+    }
+}
+
+
+function getBaseStatsColor(stats) {
+    if (stats > 50) {
+        return '#5bc686';
+    } else {
+        return '#fb7171';
+    }
+}
+
+
+function generateBaseStats(pokemonBaseStats, pokemonBaseStatsColor) {
+    return `
+    	<tr>
+            <td>HP</td>
+            <td id="hp" class="hp">${pokemonBaseStats.hp}
+                <div  class="range-view">
+                    <span style="width:${pokemonBaseStats.hp}% ; background-color: ${pokemonBaseStatsColor.hpColor}" class="baseStatsLine"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Attack</td>
+            <td id="attack" class="attack">${pokemonBaseStats.attack}
+                <div  class="range-view">
+                    <span style="width:${pokemonBaseStats.attack}% ; background-color: ${pokemonBaseStatsColor.attackColor}" class="baseStatsLine"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Defense</td>
+            <td id="defense" class="defense">${pokemonBaseStats.defense}
+                <div  class="range-view">
+                    <span style="width:${pokemonBaseStats.defense}% ; background-color: ${pokemonBaseStatsColor.defenseColor} " class="baseStatsLine"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Sp. Atk</td>
+            <td id="spAtk" class="spAtk">${pokemonBaseStats.spAtk}
+                <div  class="range-view">
+                    <span style="width:${pokemonBaseStats.spAtk}% ; background-color: ${pokemonBaseStatsColor.spAtkColor} " class="baseStatsLine"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Sp. Def</td>
+            <td id="spDef" class="spDef">${pokemonBaseStats.spDef}
+                <div  class="range-view">
+                    <span style="width:${pokemonBaseStats.spDef}% ; background-color: ${pokemonBaseStatsColor.spDefColor}" class="baseStatsLine"></span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Speed</td>
+            <td id="speed" class="speed">${pokemonBaseStats.speed}
+                <div  class="range-view">
+                    <span style="width:${pokemonBaseStats.speed}% ; background-color: ${pokemonBaseStatsColor.speedColor}" class="baseStatsLine"></span>
+                </div>
+            </td>
+        </tr>   
+    `;
+}
+
+
+async function loadEvolutions() {
+    let url = (`https://pokeapi.co/api/v2/evolution-chain/1/`);
+    let res = await fetch(url);
+    let resAsJSON = await res.json();
+    evolutions[0] = resAsJSON;
+}
+
+function showEvolutionName() {
+    let firstEvolutionName = evolutions["chain"]["species"]["name"];
+    let secondEvolutionName = evolutions["chain"]["evolves_to"][0]["species"]["name"];
+    let thirdEvolutionName = evolutions["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"];
+    document.getElementById('evolutionName1').innerHTML = firstEvolutionName;
+    document.getElementById('evolutionName2').innerHTML = secondEvolutionName;
+    document.getElementById('evolutionName3').innerHTML = thirdEvolutionName;
+
+}
+/**
+ * Kann es sein das ich das hier mit einer For-Schleife lösen muss???
+ */
+function showEvolutionImage(i) {
+    let firstEvolutionImage = allPokemons[i]['sprites']['other']['dream_world']['front_default'];
+    let secondEvolutionImage = allPokemons[i]['sprites']['other']['dream_world']['front_default'];
+    let thirdEvolutionImage = allPokemons[i]['sprites']['other']['dream_world']['front_default'];
+    document.getElementById('pokemonFirstEvolution').src = firstEvolutionImage;
+    document.getElementById('pokemonSecondEvolution').src = secondEvolutionImage;
+    document.getElementById('pokemonThirdEvolution').src = thirdEvolutionImage;
+
+}
+
+function showEvolutionNumber() {
+
+}
+
+
+function showEvolutions(i) {
+    displayEvolution();
+    document.getElementById('table' + i).innerHTML = '';
+    showEvolutionImage(i);
+    document.getElementById('table' + i).innerHTML += generateEvolution();
+}
+
+
+function generateEvolution() {
+    return `
+        <tr>
+            <td>
+            <img id="pokemonFirstEvolution" src="">
+            </td>
+            <td>Nummer</td>
+            <td id="evolutionName1">Name</td>
+        </tr>
+        <tr>
+            <td>
+            <img id="pokemonSecondEvolution" src="">
+            </td>
+            <td>Nummer</td>
+            <td id="evolutionName2">Name</td>
+        </tr>
+        <tr>
+            <td>
+            <img id="pokemonThirdEvolution" src="">
+            </td>
+            <td>Nummer</td>
+            <td id="evolutionName3">Name</td>
+        </tr>
+    `;
+}
+
+function displayBaseStets() {
+    document.getElementById('base').classList.remove('gray');
+    document.getElementById('about').classList.add('gray');
+    document.getElementById('evolution').classList.add('gray');
+    document.getElementById('move').classList.add('gray');
+}
+
+
+function displayAbout() {
+    document.getElementById('base').classList.add('gray');
+    document.getElementById('about').classList.remove('gray');
+    document.getElementById('evolution').classList.add('gray');
+    document.getElementById('move').classList.add('gray');
+}
+
+
+function displayEvolution() {
+    document.getElementById('base').classList.add('gray');
+    document.getElementById('about').classList.add('gray');
+    document.getElementById('evolution').classList.remove('gray');
+    document.getElementById('move').classList.add('gray');
+}
+
+
+// function dispalyMove() {
+//     document.getElementById('base').classList.add('gray');
+//     document.getElementById('about').classList.add('gray');
+//     document.getElementById('evolution').classList.add('gray');
+//     document.getElementById('move').classList.remove('gray');
+// }
+
+
+
 
 
 function closeSoloCard() {

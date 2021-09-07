@@ -28,7 +28,7 @@ h1 {
 
 .card-type-solo {
     text-align: center;
-    margin-bottom: 8px;
+    margin: 0px 8px 8px 8px;
 }
 
 .number-name {
@@ -36,7 +36,7 @@ h1 {
 }
 
 .d-none {
-    display: none;
+    display: none !important;
 }
 
 .info-container {
@@ -46,18 +46,13 @@ h1 {
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
     margin-top: -40px;
-    min-height: 200px;
-    max-width: 800px;
-    min-width: 350px;
     position: fixed;
     bottom: 5vh;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    width: 50vw;
+    width: 555px;
     padding: 24px;
-    transition: all 225ms;
-    left: 30vw;
 }
 
 #pokemon-background {
@@ -67,19 +62,13 @@ h1 {
     border-top-right-radius: 40px;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
-    padding: 24px;
-    min-width: 350px;
-    max-width: 800px;
-    color: white;
     background-color: #eeeeee;
     height: 550px;
-    width: 50vw;
-    transition: all 225ms;
-    left: 30vw;
+    width: 603px;
 }
 
 #pokemonImage {
-    height: 200px;
+    height: 170px;
     margin-top: -190px;
 }
 
@@ -87,6 +76,7 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0px 20px 0px 20px;
 }
 
 .close-btn {
@@ -116,7 +106,6 @@ h1 {
     right: 0;
     bottom: 0;
     left: 0;
-    transition: all .3s;
     background-color: rgba(0, 0, 0, .5);
 }
 
@@ -317,7 +306,7 @@ h1 {
 }
 
 .table {
-    padding: 20px;
+    padding: 8px;
     width: 100%;
 }
 
@@ -353,4 +342,49 @@ h1 {
     position: relative;
     border-radius: inherit;
     animation: fill .125s forwards;
+}
+
+@media (max-width: 640px) {
+    #pokemon-background {
+        width: 470px;
+    }
+    .info-container {
+        width: 422px;
+    }
+}
+
+@media (max-width: 500px) {
+    .info-container {
+        width: 360px;
+    }
+    #pokemon-background {
+        width: 408px;
+    }
+}
+
+@media (max-width: 435px) {
+    .info-container {
+        width: 270px;
+    }
+    #pokemon-background {
+        width: 319px;
+    }
+}
+
+@media (max-width: 320px) {
+    .info-container {
+        width: 255px;
+        justify-content: flex-end;
+    }
+
+    #pokemon-background {
+        width: 303px;
+        height: 530px !important;
+    }
+
+    #pokemonImage {
+        width: 75px;
+    }
+
+    
 }
