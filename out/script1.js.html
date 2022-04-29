@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: script1.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: script1.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let currentPokemons;
+let allPokemons = [];
+let loadCurrentCards = 0;
+
+
+/**
+ * Load the function 
+ */
+function init() {
+    loadMorePokemons();
+}
+
+
+/**
+ * Add 20 to variable and load a function
+ */
+function loadMorePokemons() {
+    loadCurrentCards += 20;
+    loadAmountOfPokemon(loadCurrentCards);
+
+}
+
+/**
+ * download the api and save it in a variable
+ * load a function
+ * @param {number} loadCurrentCards 
+ */
+async function loadAmountOfPokemon(loadCurrentCards) {
+    let url = ('https://pokeapi.co/api/v2/generation/1/');
+    let response = await fetch(url);
+    let responseAsJSON = await response.json();
+    generation1_pokemons = responseAsJSON;
+    currentPokemons = generation1_pokemons['pokemon_species'].lenght;
+    loadAllPokemons(loadCurrentCards);
+}
+
+/**
+ * download files from an api and save in an array
+ * load a function
+ * @param {number} loadCurrentCards 
+ */
+async function loadAllPokemons(loadCurrentCards) {
+    let x = 0;
+    if (loadCurrentCards > 19) {
+        x = loadCurrentCards - 20;
+    }
+    if (loadCurrentCards > currentPokemons) {
+        loadCurrentCards = currentPokemons;
+    }
+    for (let i = x; i &lt; loadCurrentCards; i++) {
+        let url = (`https://pokeapi.co/api/v2/pokemon/${i + 1}`);
+        let response = await fetch(url);
+        let responseAsJSON = await response.json();
+        allPokemons[i] = responseAsJSON;
+    }
+    renderPokemonCards(loadCurrentCards, x);
+}
+
+/**
+ * render pokemoncards and show in html
+ * @param {number} loadCurrentCards 
+ * @param {number} x 
+ */
+function renderPokemonCards(loadCurrentCards, x) {
+    for (let i = x; i &lt; loadCurrentCards; i++) {
+        document.getElementById('all-pokemon-cards').innerHTML += generatePokemonCards(i);
+        showNumber(i);
+        showName(i);
+        showImageSmall(i)
+        showType(i);
+    }
+}
+
+/**
+ * generate HTML Text
+ * @param {number} i 
+ * @returns HTML text 
+ */
+function generatePokemonCards(i) {
+    return `
+    &lt;div id="allCards${i}" class="all-cards" onclick="showSoloPokemonCard(${i})">        
+        &lt;h2 id="card-title${i}">&lt;/h2>
+        &lt;div id="card-type${i}">
+            
+            
+        &lt;/div>
+        &lt;div class="number-name">        
+            &lt;div class="card-number">
+                &lt;div>
+                    #&lt;span id="card-number${i}">&lt;/span>
+                &lt;/div>
+            &lt;/div>
+            &lt;div class="card-image">
+                &lt;img id="card-image${i}" src="">
+            &lt;/div>
+        &lt;/div>            
+    &lt;/div>
+        
+    `;
+}
+
+/**
+ * Show the number of Pokemon 
+ * @param {number} i 
+ */
+function showNumber(i) {
+    let pokemonNumber = i + 1;
+    if (i &lt; 9) {
+        pokemonNumber = `0${pokemonNumber}`;
+    }
+    if (i &lt; 99) {
+        pokemonNumber = `0${pokemonNumber}`;
+    }
+    document.getElementById('pokeNumber').innerHTML = pokemonNumber;
+    document.getElementById(`card-number${i}`).innerHTML = pokemonNumber;
+
+}
+
+/**
+ * Show the name of the pokemon 
+ * @param {number} i 
+ */
+function showName(i) {
+    let pokemonName = allPokemons[i]['name'];
+    document.getElementById(`card-title${i}`).innerHTML = pokemonName;
+    document.getElementById('pokeName').innerHTML = pokemonName;
+}
+
+/**
+ * show the image of the pokemon at single card
+ * @param {number} i 
+ */
+function showImage(i) {
+    let pokemonImage = allPokemons[i]['sprites']['other']['dream_world']['front_default'];
+    document.getElementById('pokemonImage').src = pokemonImage;
+}
+
+/**
+ * show the pokemon image on every card
+ * @param {number} i 
+ */
+function showImageSmall(i) {
+    let pokemonImageSmall = allPokemons[i]['sprites']['front_default'];
+    document.getElementById(`card-image${i}`).src = pokemonImageSmall
+}
+
+/**
+ * show the type of the pokemon 
+ * @param {number} index 
+ */
+function showType(index) {
+    document.getElementById('card-type' + index).innerHTML = "";
+    for (let i = 0; i &lt; allPokemons[index]['types'].length; i++) {
+        document.getElementById('card-type' + index).innerHTML += `
+        &lt;div class="card-type card-text ${allPokemons[index]['types'][i]['type']['name']}">${allPokemons[index]['types'][i]['type']['name']}&lt;/div>
+        `;
+    }
+}
+
+/**
+ * show the single card from picked pokemon 
+ * @param {number} i 
+ */
+function showSoloPokemonCard(i) {
+    document.getElementById('soloCard').classList.remove('d-none');
+    document.getElementById('soloCard').innerHTML = generateSingleCards(i);
+    showNumber(i);
+    showName(i);
+    showImage(i);
+    showTypeSolo(i);
+    showAboutPokemon(i);
+}
+
+/**
+ * generate HTML text 
+ * @param {number} i 
+ * @returns HTML text
+ */
+function generateSingleCards(i) {
+    return `
+    &lt;div id="pokemon-background">
+        &lt;div class="card-head">
+            &lt;div>
+                &lt;span class="close-btn" onclick="closeSoloCard()">X&lt;/span>
+            &lt;/div>
+            &lt;div id="pokemon">
+                &lt;h1 id="pokeName">Name&lt;/h1>
+            &lt;/div>
+            &lt;div class="pokemon-number">
+                #&lt;span id="pokeNumber">001&lt;/span>
+            &lt;/div>
+        &lt;/div>    
+        &lt;div id="card-type-solo${i}" class="card-type-solo">&lt;/div>
+                &lt;div class="info-container">
+            &lt;img id="pokemonImage" src="">
+            &lt;div id="pokemonInfoHead" class="flex">
+                &lt;div id="about" class="" onclick="showAbout(${i})">
+                    About
+                &lt;/div>
+                &lt;div id="base" class="gray" onclick="showBaseStats(${i})">
+                    Base Stats
+                &lt;/div>
+            &lt;/div>
+            &lt;div>
+                &lt;table id="table${i}" class="table">
+                    &lt;tr>
+                        &lt;td>Height&lt;/td>
+                        &lt;td id="heightPokemon">60cm&lt;/td>
+                    &lt;/tr>
+                    &lt;tr>
+                        &lt;td>Weigth&lt;/td>
+                        &lt;td id="weightPokemon">8.5 kg&lt;/td>
+                    &lt;/tr>
+                    &lt;tr>
+                        &lt;td>Abilities&lt;/td>
+                        &lt;td id="abilities">Blaze, Solar-Power&lt;/td>
+                    &lt;/tr>
+                &lt;/table>
+            &lt;/div>
+    &lt;/div>
+
+        &lt;/div>
+    `;
+}
+
+/**
+ * show typ at solo card
+ * @param {number} index 
+ */
+function showTypeSolo(index) {
+    document.getElementById('card-type-solo' + index).innerHTML = "";
+    for (let i = 0; i &lt; allPokemons[index]['types'].length; i++) {
+        document.getElementById('card-type-solo' + index).innerHTML += `
+        &lt;div class="card-type-solo ${allPokemons[index]['types'][i]['type']['name']}">${allPokemons[index]['types'][i]['type']['name']}&lt;/div>
+        `;
+    }
+}
+
+/**
+ * generate HTML text
+ * @returns HTML text
+ */
+function generateAboutPokemon() {
+    return `
+        &lt;tr>
+            &lt;td>Height&lt;/td>
+            &lt;td id="heightPokemon">60cm&lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Weigth&lt;/td>
+            &lt;td id="weightPokemon">8.5 kg&lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Abilities&lt;/td>
+            &lt;td id="abilities">Blaze, Solar-Power&lt;/td>
+        &lt;/tr>
+    `;
+
+}
+
+/**
+ * generate the height, weight and abilities from pokemon
+ * @param {number} i 
+ */
+function showAboutPokemon(i) {
+    let height = allPokemons[i]['height'];
+    let weight = allPokemons[i]['weight'];
+    document.getElementById('heightPokemon').innerHTML = height + 'cm';
+    document.getElementById('weightPokemon').innerHTML = weight + 'kg';
+    document.getElementById('abilities').innerHTML = '';
+    for (let j = 0; j &lt; allPokemons[i]['abilities'].length; j++) {
+        let abilities = allPokemons[i]['abilities'][j]['ability']['name'];
+        if (j == 0) {
+            document.getElementById('abilities').innerHTML += `${abilities}`;
+        } else {
+            document.getElementById('abilities').innerHTML += `, ${abilities}`;
+        }
+    }
+}
+
+/**
+ * show the window about
+ * @param {number} i 
+ */
+function showAbout(i) {
+    document.getElementById(`table${i}`).innerHTML = generateAboutPokemon();
+    showAboutPokemon(i);
+    displayAbout();
+    document.getElementById('pokemon-background').style.height = '550px';
+
+}
+
+/**
+ * generate base stats from pokemon
+ * @param {number} i 
+ */
+function showBaseStats(i) {
+    displayBaseStets();
+    let pokemonBaseStats = getPokemonBaseStats(i);
+    let pokemonBaseStatsColor = getPokemonBaseStatsColor(pokemonBaseStats);
+    document.getElementById('pokemon-background').style.height = '665px';
+    document.getElementById('table' + i).innerHTML = generateBaseStats(pokemonBaseStats, pokemonBaseStatsColor);
+}
+
+/**
+ * save the values from arry in variabel
+ * @param {number} i 
+ * @returns values 
+ */
+function getPokemonBaseStats(i) {
+    return {
+        hp: allPokemons[i]['stats'][0]['base_stat'],
+        attack: allPokemons[i]['stats'][1]['base_stat'],
+        defense: allPokemons[i]['stats'][2]['base_stat'],
+        spAtk: allPokemons[i]['stats'][3]['base_stat'],
+        spDef: allPokemons[i]['stats'][4]['base_stat'],
+        speed: allPokemons[i]['stats'][5]['base_stat'],
+    }
+}
+
+/**
+ * save the color from values
+ * @param {values} pokemonBaseStats 
+ * @returns Color from values
+ */
+function getPokemonBaseStatsColor(pokemonBaseStats) {
+    return {
+        hpColor: getBaseStatsColor(pokemonBaseStats['hp']),
+        attackColor: getBaseStatsColor(pokemonBaseStats['attack']),
+        defenseColor: getBaseStatsColor(pokemonBaseStats['defense']),
+        spAtkColor: getBaseStatsColor(pokemonBaseStats['spAtk']),
+        spDefColor: getBaseStatsColor(pokemonBaseStats['spDef']),
+        speedColor: getBaseStatsColor(pokemonBaseStats['speed']),
+    }
+}
+
+/**
+ * give back the color at a saved value
+ * @param {number} stats 
+ * @returns the color in hex code
+ */
+function getBaseStatsColor(stats) {
+    if (stats > 50) {
+        return '#5bc686';
+    } else {
+        return '#fb7171';
+    }
+}
+
+/**
+ * generate HTML text and color
+ * @param {value} pokemonBaseStats 
+ * @param {color} pokemonBaseStatsColor 
+ * @returns HTML text and values
+ */
+function generateBaseStats(pokemonBaseStats, pokemonBaseStatsColor) {
+    return `
+    	&lt;tr>
+            &lt;td>HP&lt;/td>
+            &lt;td id="hp" class="hp">${pokemonBaseStats.hp}
+                &lt;div  class="range-view">
+                    &lt;span style="width:${pokemonBaseStats.hp}% ; background-color: ${pokemonBaseStatsColor.hpColor}" class="baseStatsLine">&lt;/span>
+                &lt;/div>
+            &lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Attack&lt;/td>
+            &lt;td id="attack" class="attack">${pokemonBaseStats.attack}
+                &lt;div  class="range-view">
+                    &lt;span style="width:${pokemonBaseStats.attack}% ; background-color: ${pokemonBaseStatsColor.attackColor}" class="baseStatsLine">&lt;/span>
+                &lt;/div>
+            &lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Defense&lt;/td>
+            &lt;td id="defense" class="defense">${pokemonBaseStats.defense}
+                &lt;div  class="range-view">
+                    &lt;span style="width:${pokemonBaseStats.defense}% ; background-color: ${pokemonBaseStatsColor.defenseColor} " class="baseStatsLine">&lt;/span>
+                &lt;/div>
+            &lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Sp. Atk&lt;/td>
+            &lt;td id="spAtk" class="spAtk">${pokemonBaseStats.spAtk}
+                &lt;div  class="range-view">
+                    &lt;span style="width:${pokemonBaseStats.spAtk}% ; background-color: ${pokemonBaseStatsColor.spAtkColor} " class="baseStatsLine">&lt;/span>
+                &lt;/div>
+            &lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Sp. Def&lt;/td>
+            &lt;td id="spDef" class="spDef">${pokemonBaseStats.spDef}
+                &lt;div  class="range-view">
+                    &lt;span style="width:${pokemonBaseStats.spDef}% ; background-color: ${pokemonBaseStatsColor.spDefColor}" class="baseStatsLine">&lt;/span>
+                &lt;/div>
+            &lt;/td>
+        &lt;/tr>
+        &lt;tr>
+            &lt;td>Speed&lt;/td>
+            &lt;td id="speed" class="speed">${pokemonBaseStats.speed}
+                &lt;div  class="range-view">
+                    &lt;span style="width:${pokemonBaseStats.speed}% ; background-color: ${pokemonBaseStatsColor.speedColor}" class="baseStatsLine">&lt;/span>
+                &lt;/div>
+            &lt;/td>
+        &lt;/tr>   
+    `;
+}
+
+/**
+ * change color of values about and base
+ */
+function displayBaseStets() {
+    document.getElementById('base').classList.remove('gray');
+    document.getElementById('about').classList.add('gray');
+
+}
+
+/**
+ * change color of values about an base
+ */
+function displayAbout() {
+    document.getElementById('base').classList.add('gray');
+    document.getElementById('about').classList.remove('gray');
+
+}
+
+/**
+ * close the solo card from each pokemon
+ */
+function closeSoloCard() {
+    document.getElementById('soloCard').classList.add('d-none');
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#closeSoloCard">closeSoloCard</a></li><li><a href="global.html#displayAbout">displayAbout</a></li><li><a href="global.html#displayBaseStets">displayBaseStets</a></li><li><a href="global.html#generateAboutPokemon">generateAboutPokemon</a></li><li><a href="global.html#generateBaseStats">generateBaseStats</a></li><li><a href="global.html#generatePokemonCards">generatePokemonCards</a></li><li><a href="global.html#generateSingleCards">generateSingleCards</a></li><li><a href="global.html#getBaseStatsColor">getBaseStatsColor</a></li><li><a href="global.html#getPokemonBaseStats">getPokemonBaseStats</a></li><li><a href="global.html#getPokemonBaseStatsColor">getPokemonBaseStatsColor</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#loadAllPokemons">loadAllPokemons</a></li><li><a href="global.html#loadAmountOfPokemon">loadAmountOfPokemon</a></li><li><a href="global.html#loadMorePokemons">loadMorePokemons</a></li><li><a href="global.html#renderPokemonCards">renderPokemonCards</a></li><li><a href="global.html#showAbout">showAbout</a></li><li><a href="global.html#showAboutPokemon">showAboutPokemon</a></li><li><a href="global.html#showBaseStats">showBaseStats</a></li><li><a href="global.html#showImage">showImage</a></li><li><a href="global.html#showImageSmall">showImageSmall</a></li><li><a href="global.html#showName">showName</a></li><li><a href="global.html#showNumber">showNumber</a></li><li><a href="global.html#showSoloPokemonCard">showSoloPokemonCard</a></li><li><a href="global.html#showType">showType</a></li><li><a href="global.html#showTypeSolo">showTypeSolo</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Sep 14 2021 21:02:09 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
