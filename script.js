@@ -3,6 +3,10 @@ let allPokemons = [];
 let loadCurrentCards = 0;
 let evolutions = [];
 let loadCurrentEvolution = 0;
+let filteredPokemons = []
+let species = []
+let images = []
+
 
 function init() {
     loadMorePokemons();
@@ -20,7 +24,7 @@ async function loadAmountOfPokemon(loadCurrentCards) {
     let url = ('https://pokeapi.co/api/v2/generation/1/');
     let response = await fetch(url);
     let responseAsJSON = await response.json();
-    generation1_pokemons = responseAsJSON;
+    let generation1_pokemons = responseAsJSON;
     currentPokemons = generation1_pokemons['pokemon_species'].lenght;
     loadAllPokemons(loadCurrentCards);
 }
@@ -89,12 +93,11 @@ function showNumber(i) {
     }
     document.getElementById('pokeNumber').innerHTML = pokemonNumber;
     document.getElementById(`card-number${i}`).innerHTML = pokemonNumber;
-
 }
 
 
 function showName(i) {
-    let pokemonName = allPokemons[i]['name'];
+    let pokemonName = allPokemons[i].name;
     document.getElementById(`card-title${i}`).innerHTML = pokemonName;
     document.getElementById('pokeName').innerHTML = pokemonName;
 }
@@ -123,6 +126,8 @@ function showType(index) {
 
 
 function showSoloPokemonCard(i) {
+    document.body.style.position = "fixed"
+
     document.getElementById('soloCard').classList.remove('d-none');
     document.getElementById('soloCard').innerHTML = generateSingleCards(i);
     showNumber(i);
@@ -141,7 +146,7 @@ function generateSingleCards(i) {
                 <span class="close-btn" onclick="closeSoloCard()">X</span>
             </div>
             <div id="pokemon">
-                <h1 id="pokeName">Name</h1>
+                <h1 id="pokeName"></h1>
             </div>
             <div class="pokemon-number">
                 #<span id="pokeNumber">001</span>
@@ -168,15 +173,15 @@ function generateSingleCards(i) {
                 <table id="table${i}" class="table">
                     <tr>
                         <td>Height</td>
-                        <td id="heightPokemon">60cm</td>
+                        <td id="heightPokemon"></td>
                     </tr>
                     <tr>
                         <td>Weigth</td>
-                        <td id="weightPokemon">8.5 kg</td>
+                        <td id="weightPokemon"></td>
                     </tr>
                     <tr>
                         <td>Abilities</td>
-                        <td id="abilities">Blaze, Solar-Power</td>
+                        <td id="abilities"></td>
                     </tr>
                 </table>
             </div>
@@ -338,96 +343,173 @@ function generateBaseStats(pokemonBaseStats, pokemonBaseStatsColor) {
 }
 
 
+
+
+
+async function loadPokemonSpecies(k) {
+    let url = (`https://pokeapi.co/api/v2/pokemon-species/${k + 1}`);
+    let response = await fetch(url);
+    let responseAsJSON = await response.json();
+    species = responseAsJSON;
+    loadEvolutions()
+}
+
 async function loadEvolutions() {
-    let url = (`https://pokeapi.co/api/v2/evolution-chain/${k}/`);
+    let url = species.evolution_chain.url
     let res = await fetch(url);
     let resAsJSON = await res.json();
-    evolutions[k] = resAsJSON;
+    evolutions = resAsJSON;
+    let evolutionChainId = species.evolution_chain.url.split("/").slice(-2, -1)[0]
+    showEvolutionName()
+    loadEvolutionImages(evolutionChainId)
+}
+
+async function loadEvolutionImages(id) {
+    let url = `https://pokeapi.co/api/v2/evolution-chain/${id}`
+    let res = await fetch(url)
+    let resAsJSON = await res.json()
+    images = resAsJSON;
+    showEvolutionImage(images.chain)
 }
 
 
-async function loadPokemonSpecies() {
-    let url = (`https://pokeapi.co/api/v2/pokemon-species/${i}/`);
-    let res = await fetch(url);
-    let resAsJSON = await res.json();
-    species[i] = resAsJSON;
-}
+function showEvolutionName() {
+    let evolutionNameContainer = document.getElementById("evolution-name")
+    let firstEvolution = evolutions.chain.species.name
+    let trElementFirstName = document.createElement('td');
+    trElementFirstName.textContent = firstEvolution;
+    evolutionNameContainer.appendChild(trElementFirstName);
 
+    let names = []
+    let evolutionDetails = evolutions
 
-function showEvolutionName(k) {
-    let firstEvolutionName = evolutions[k]["chain"]["species"]["name"];
-    let secondEvolutionName = evolutions[k]["chain"]["evolves_to"][0]["species"]["name"];
-    let thirdEvolutionName = evolutions[k]["chain"]["evolves_to"][0]["evolves_to"][0]["species"]["name"];
-    document.getElementById('evolutionName1').innerHTML = firstEvolutionName;
-    document.getElementById('evolutionName2').innerHTML = secondEvolutionName;
-    document.getElementById('evolutionName3').innerHTML = thirdEvolutionName;
-
-
-
-}
-
-
-function showEvolutionImage() {
-    for (let i = 0; i < 1; i++) {
-        let ImageEvolution = allPokemons[i]['sprites']['other']['dream_world']['front_default'];
-        let firstEvolutionImage = ImageEvolution;
-        let secondEvolutionImage = ImageEvolution;
-        let thirdEvolutionImage = ImageEvolution;
-        document.getElementById('pokemonFirstEvolution').src = firstEvolutionImage;
-        document.getElementById('pokemonSecondEvolution').src = secondEvolutionImage;
-        document.getElementById('pokemonThirdEvolution').src = thirdEvolutionImage;
-
+    while (evolutionDetails.chain.evolves_to.length > 0) {
+        let evolutionNameUrl = evolutionDetails.chain.evolves_to[0].species.name
+        names.push(evolutionNameUrl)
+        if (evolutionDetails.chain.evolves_to[0].evolves_to[0] == undefined) {
+            break
+        }
+        let thirdName = evolutionDetails.chain.evolves_to[0].evolves_to[0].species.name;
+        names.push(thirdName)
+        break
     }
-
-
-
-}
-
-
-function showEvolutionNumber() {
+    names.forEach((name) => {
+        let trElement = document.createElement('td');
+        trElement.textContent = name;
+        evolutionNameContainer.appendChild(trElement);
+    })
 
 }
 
 
-function showEvolutions(i, k) {
+function showEvolutionImage(imagesChain) {
+    let evolutionImageContainer = document.getElementById("evolution-image")
+    evolutionImageContainer.innerHTML = "";
+    let currentPokemon = imagesChain.species.name;
+    let evolutionImageUrl = `https://img.pokemondb.net/sprites/black-white/normal/${currentPokemon}.png`
+    let firstImgElement = document.createElement('img');
+    let arrow = document.createElement("img")
+    arrow.src = "img/arrow-2-32.png"
+    arrow.classList.add("arrow")
+    firstImgElement.src = evolutionImageUrl;
+    firstImgElement.alt = currentPokemon;
+    evolutionImageContainer.appendChild(firstImgElement);
+    evolutionImageContainer.appendChild(arrow);
+
+
+
+    let evolutions = []
+    let evolutionDetails = imagesChain
+    while (evolutionDetails.evolves_to.length > 0) {
+        let evolutionImageUrl = `https://img.pokemondb.net/sprites/black-white/normal/${evolutionDetails.evolves_to[0].species.name}.png`;
+        let evolutionImgElement = document.createElement('img');
+        let arrow2 = document.createElement("img")
+        arrow2.src = "img/arrow-2-32.png"
+        arrow2.classList.add("arrow")
+        evolutionImgElement.src = evolutionImageUrl;
+        evolutionImgElement.alt = evolutionDetails.evolves_to[0].species.name;
+        evolutionImageContainer.appendChild(evolutionImgElement);
+        evolutionImageContainer.appendChild(arrow2);
+
+        evolutions.push(evolutionDetails.evolves_to[0].species.name);
+
+        let thirdImage = evolutionDetails.evolves_to[0].evolves_to[0];
+        if (evolutionDetails.evolves_to[0].evolves_to[0] == undefined) {
+            arrow2.classList.add("d-none")
+            break
+        }
+        if (thirdImage) {
+            let thirdImageUrl = `https://img.pokemondb.net/sprites/black-white/normal/${thirdImage.species.name}.png`;
+            let thirdImgElement = document.createElement('img');
+            thirdImgElement.src = thirdImageUrl;
+            thirdImgElement.alt = thirdImage.species.name;
+            evolutionImageContainer.appendChild(thirdImgElement);
+
+            evolutions.push(thirdImage.species.name);
+        }
+        break;
+    }
+}
+
+
+
+function showEvolutions(i) {
+    loadPokemonSpecies(i)
     displayEvolution(i);
     document.getElementById('pokemon-background').style.height = '665px';
-    // document.getElementById('table' + i).classList.add('tableEvolution')
     document.getElementById('table' + i).innerHTML = '';
-    document.getElementById('table' + i).innerHTML += generateEvolution();
-    showEvolutionImage();
-    showEvolutionName(k);
+    document.getElementById('table' + i).innerHTML = generateEvolution();
 }
 
 
 function generateEvolution() {
     return `
-        <tr>
-            <td>
-            <img class="imageEvolution" id="pokemonFirstEvolution" src="">
-            </td>
-            <td>Nummer</td>
-            <td id="evolutionName1">Name</td>
-        </tr>
-        <tr>
-            <td>
-            <img class="imageEvolution" id="pokemonSecondEvolution" src="">
-            </td>
-            <td>Nummer</td>
-            <td id="evolutionName2">Name</td>
-        </tr>
-        <tr>
-            <td>
-            <img class="imageEvolution" id="pokemonThirdEvolution" src="">
-            </td>
-            <td>Nummer</td>
-            <td id="evolutionName3">Name</td>
-        </tr>
+    
+        <div id="evolution-image"></div>
+        
+     
+        <div id="evolution-name"></div>
+
     `;
 }
 
+
+function showMoves(i) {
+    dispalyMove(i)
+    document.getElementById('table' + i).innerHTML = '';
+    document.getElementById(`table` + i).innerHTML = generateMovesPokemon();
+    document.getElementById('pokemon-background').style.height = '665px';
+    showMovesFromPokemon(i)
+}
+
+
+function generateMovesPokemon() {
+    return `
+        <ul class="list" id="moves">
+           
+        </ul>
+    `
+}
+
+function showMovesFromPokemon(i) {
+    let listContainer = document.getElementById("moves")
+    let pokemon = allPokemons[i]
+    console.log(pokemon.moves);
+    pokemon.moves.forEach(moves => {
+        console.log(moves.move.name);
+        let list = document.createElement("li")
+        let moveList = moves.move.name
+        list.textContent = moveList
+        listContainer.appendChild(list)
+    });
+
+
+}
+
+
 function displayBaseStets(i) {
     document.getElementById('base').classList.remove('gray');
+    document.getElementById('base').classList.add('big');
     document.getElementById('about').classList.add('gray');
     document.getElementById('evolution').classList.add('gray');
     document.getElementById('move').classList.add('gray');
@@ -437,6 +519,7 @@ function displayBaseStets(i) {
 
 function displayAbout(i) {
     document.getElementById('base').classList.add('gray');
+    document.getElementById('about').classList.add('big');
     document.getElementById('about').classList.remove('gray');
     document.getElementById('evolution').classList.add('gray');
     document.getElementById('move').classList.add('gray');
@@ -446,6 +529,7 @@ function displayAbout(i) {
 
 function displayEvolution(i) {
     document.getElementById('base').classList.add('gray');
+    document.getElementById('evolution').classList.add('big');
     document.getElementById('about').classList.add('gray');
     document.getElementById('evolution').classList.remove('gray');
     document.getElementById('move').classList.add('gray');
@@ -453,12 +537,14 @@ function displayEvolution(i) {
 }
 
 
-// function dispalyMove() {
-//     document.getElementById('base').classList.add('gray');
-//     document.getElementById('about').classList.add('gray');
-//     document.getElementById('evolution').classList.add('gray');
-//     document.getElementById('move').classList.remove('gray');
-// }
+function dispalyMove(i) {
+    document.getElementById('base').classList.add('gray');
+    document.getElementById('about').classList.add('gray');
+    document.getElementById('evolution').classList.add('gray');
+    document.getElementById('move').classList.remove('gray');
+    document.getElementById('move').classList.add('big');
+    document.getElementById('table' + i).classList.remove('tableEvolution')
+}
 
 
 
@@ -466,4 +552,177 @@ function displayEvolution(i) {
 
 function closeSoloCard() {
     document.getElementById('soloCard').classList.add('d-none');
+    document.body.style.position = ""
+}
+
+function filterPokemons() {
+    let search = document.getElementById('search').value.toLowerCase().trim();
+    let filteredPokemons = allPokemons.filter(pokemon => pokemon.name.toLowerCase().includes(search))
+    if (filteredPokemons.lenght == 0) {
+        loadAmountOfPokemon(loadCurrentCards);
+    } else {
+        showFilteredPokemon(filteredPokemons);
+    }
+}
+
+function showFilteredPokemon(filteredPokemons) {
+    console.log(filteredPokemons);
+    document.getElementById('all-pokemon-cards').innerHTML = '';
+    for (let j = 0; j < filteredPokemons.length; j++) {
+        let id = filteredPokemons[j].id
+        let name = filteredPokemons[j].name
+        let number = filteredPokemons[j].id
+        let types = filteredPokemons[j].types
+        let img = filteredPokemons[j].sprites.front_default
+        document.getElementById('all-pokemon-cards').innerHTML += generateFilterPokemon(id, name, number);
+        showFilterName(id, name);
+        showFilterImageSmall(id, img);
+        showFilterNumber(id, number);
+        showFilterType(id, types);
+    }
+}
+
+function generateFilterPokemon(i, name, number) {
+    return `
+    <div id="filteredPokemons${i}" class="all-cards" onclick="showSoloFilteredPokemonCard(${i - 1})">        
+        <h2 id="card-title${i}">${{ name }}</h2>
+        <div id="card-type${i}">
+            
+            
+        </div>
+        <div class="number-name">        
+            <div class="card-number">
+                <div>
+                    #<span id="card-number${i}"></span>
+                </div>
+            </div>
+            <div class="card-image">
+                <img id="pokemonImage${i}" src="">
+            </div>
+        </div>            
+    </div>
+        
+    `;
+}
+
+function showFilterName(i, name) {
+    document.getElementById(`card-title${i}`).innerHTML = name;
+
+}
+
+function showFilterSoloName(i) {
+    let pokemonName = allPokemons[i].name;
+    document.getElementById('filterPokeName').innerHTML = pokemonName;
+}
+
+function showFilterImageSmall(i, img) {
+    document.getElementById(`pokemonImage${i}`).src = img;
+}
+
+function showFilterImage(i) {
+    let pokemonImage = allPokemons[i].sprites.other.dream_world.front_default;
+    document.getElementById('filterPokemonImage').src = pokemonImage;
+}
+
+function showFilterNumber(i, number) {
+    // let num = number + 1
+    if (number <= 9) {
+        number = `0${number}`;
+    }
+    if (number < 99) {
+        number = `0${number}`;
+    }
+    document.getElementById(`card-number${i}`).innerHTML = number
+}
+
+function showSoloFilterNumber(i) {
+    let pokemonFilterNumber = i + 1
+    if (i <= 9) {
+        pokemonFilterNumber = `0${pokemonFilterNumber}`;
+    }
+    if (i < 99) {
+        pokemonFilterNumber = `0${pokemonFilterNumber}`;
+    }
+    document.getElementById(`pokeNumber`).innerHTML = pokemonFilterNumber
+}
+
+function showFilterType(index, types) {
+    document.getElementById('card-type' + index).innerHTML = "";
+    for (let i = 0; i < types.length; i++) {
+        document.getElementById('card-type' + index).innerHTML += `
+        <div class="card-type card-text ${types[i]['type']['name']}">${types[i]['type']['name']}</div>
+        `;
+    }
+}
+
+function showTypeFilteredSolo(index) {
+    document.getElementById('filter-card-type-solo' + index).innerHTML = "";
+    for (let i = 0; i < allPokemons[index]['types'].length; i++) {
+        document.getElementById('filter-card-type-solo' + index).innerHTML += `
+        <div class="card-type-solo card-text ${allPokemons[index].types[i].type.name}">${allPokemons[index].types[i].type.name}</div>
+        `;
+    }
+}
+
+function showSoloFilteredPokemonCard(i) {
+    document.getElementById('soloCard').classList.remove('d-none');
+    document.getElementById('soloCard').innerHTML = generateSingleFilteredCards(i, name);
+    showFilterSoloName(i)
+    showSoloFilterNumber(i)
+    showTypeFilteredSolo(i)
+    showFilterImage(i);
+}
+
+function generateSingleFilteredCards(i, name) {
+    return `
+    <div id="pokemon-background">
+        <div class="card-head">
+            <div>
+                <span class="close-btn" onclick="closeSoloCard()">X</span>
+            </div>
+            <div id="pokemon">
+                <h1 id="filterPokeName">${{ name }}</h1>
+            </div>
+            <div class="pokemon-number">
+                #<span id="pokeNumber">001</span>
+            </div>
+        </div>
+        <div id="filter-card-type-solo${i}" class="card-type-solo"></div>
+                <div class="pokeImgSolo">
+                    <img id="filterPokemonImage" src="">
+                </div>
+                <div class="info-container">
+                    <div id="pokemonInfoHead" class="flex">
+                        <div id="about" class="" onclick="showAbout(${i})">
+                            About
+                        </div>
+                        <div id="base" class="gray" onclick="showBaseStats(${i})">
+                            Base Stats
+                        </div>
+                        <div id="evolution" class="gray" onclick="showEvolutions(${i})">
+                            Evolution
+                        </div>
+                        <div id="move" class="gray" onclick="showMoves(${i})">
+                            Moves
+                        </div>
+                    </div>
+                <div>
+                    <table id="table${i}" class="table">
+                        <tr>
+                            <td>Height</td>
+                            <td id="heightPokemon"></td>
+                        </tr>
+                        <tr>
+                            <td>Weigth</td>
+                            <td id="weightPokemon"></td>
+                        </tr>
+                        <tr>
+                            <td>Abilities</td>
+                            <td id="abilities"></td>
+                        </tr>
+                    </table>
+                </div>
+        </div>
+    </div>
+    `;
 }

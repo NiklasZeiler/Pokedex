@@ -7,17 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
     <link rel="icon" href="img/pokemon-g012beffaf_640.png" type="image/x-icon">
-    <link rel="stylesheet" href="font.css">
-    <!-- <script src="script.js"></script> -->
-    <script src="script1.js"></script>
+    <link rel="stylesheet" href="fonts.css">
+    <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body onload="init()">
     <div class="main" id="main">
-        <h1>PokeDex</h1>
-        <input type="search" name="search" id="search" placeholder="Search...">
-        <button class="search-btn" onclick="filterPokemons()">Search</button>
+        <img src="img/headline.png" alt="">
+        <input onkeydown="filterPokemons()" type="search" name="search" id="search" placeholder="Search...">
         <div id="all-pokemon-cards">
 
         </div>
